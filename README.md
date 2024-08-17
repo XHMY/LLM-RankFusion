@@ -64,11 +64,11 @@ In this repository, we use DL 2019 as an example. That is, we always re-rank `da
 
 ## Cache Preference Queries for Future Runs
 
-We will first run a `allpair` comparison to cache all preference queries.
+We will first run an `allpair` comparison to cache all preference queries.
 Because this process can use be fully parallelized, we can use `accelerate` and batch inference to speed up the process.
 After we get the cache, we can use it for future ranking experiments.
 
-The following commands run on machine with 4 x Tesla V100-SXM3-32GB GPUs:
+The following commands run on a machine with 4 x Tesla V100-SXM3-32GB GPUs:
 
 ```bash
 model=meta-llama/Meta-Llama-3-8B-Instruct
@@ -91,17 +91,17 @@ pairwise --method $method --k 100 --batch_size 8
 
 ## Calibration
 
-After finish the `allpair` comparison, we can calibrate the cached logits in each preference query.
+After finishing the `allpair` comparison, we can calibrate the cached logits in each preference query.
 
 ```bash
 python calibrate.py --model_dir "outputs/run.pairwise*preference_matrix"
 ```
 
-## Parirwise Ranking with Sorting
+## Pairwise Ranking with Sorting
 
 The calibration and ICL ideally do not require `allpair` comparison.
 Because we usually need to run the pairwise ranking multiple times, caching the preference queries can save a lot of time.
-The sorted-based ranking with comparisons on the fly is possible, but it still not be implemented in this repo.
+The sorted-based ranking with comparisons on the fly is possible, but it can still not be implemented in this repo.
 
 ```bash
 model=meta-llama/Meta-Llama-3-8B-Instruct
@@ -135,9 +135,9 @@ done
 
 ## Aggregation
 
-The `agg.py` script can aggregate ranking list file in pyserini format. 
+The `agg.py` script can aggregate ranking list files in pyserini format. 
 The `docid_map_path` is the path to the preference matrix file, which contains the `docid-map_q-*.json`.
-These file map the docid to the preference query index, which should be consistent within the same run.
+These files map the docid to the preference query index, which should be consistent within the same run.
 
 `--input` is the path to the ranking list files, which should be in pyserini format. This can be a glob pattern to match multiple files.
 
@@ -151,7 +151,7 @@ python agg.py --input "outputs/run.pairwise-icl.*.txt" \
 
 ## Evaluation
 
-This python script can evaluate the ranking list file in pyserini format.
+This Python script can evaluate the ranking list file in pyserini format.
 `--log_file` is the path to the ranking list file, which should be in pyserini format. This can be a glob pattern to match multiple files.
 It uses `joblib` to parallelize the evaluation process if there are multiple files.
 
