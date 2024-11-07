@@ -20,6 +20,12 @@ for model_dir in tqdm(glob(args.model_dir)):
     for q_file in glob(join(model_dir, "q-*_logit.npy")):
         qid = re.search(r"q-(\d+)_logit\.npy", q_file).group(1)
         logit_arr = np.load(q_file).astype(np.float32)
+
+        # save comparision matrix for without calibration
+        wocal_arr = np.apply_along_axis(lambda x: x[0] > x[1], axis=-1, arr=logit_arr)
+        np.save(q_file.replace("_logit", "_wocal"), wocal_arr)
+
+        # calibration
         preference_mat[qid] = softmax(logit_arr, -1)[...,0]
         preference_mat[qid] = softmax(np.stack([preference_mat[qid],
                                                 preference_mat[qid].T], -1), -1)[...,0]
