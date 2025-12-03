@@ -135,7 +135,7 @@ done
 
 ## Aggregation
 
-The `agg.py` script can aggregate ranking list files in pyserini format. 
+The `agg/aggregate_pyserini.py` script can aggregate ranking list files in pyserini format. 
 The `docid_map_path` is the path to the preference matrix file, which contains the `docid-map_q-*.json`.
 These files map the docid to the preference query index, which should be consistent within the same run.
 
@@ -144,7 +144,7 @@ These files map the docid to the preference query index, which should be consist
 `--output` is the path to the output file, which is also in pyserini format.
 
 ```bash
-python agg.py --input "outputs/run.pairwise-icl.*.txt" \
+python agg/aggregate_pyserini.py --input "outputs/run.pairwise-icl.*.txt" \
 --output "outputs/run.agg.txt" \
 --docid_map_path "outputs/run.pairwise-icl.allpair.Meta-Llama-3-8B-Instruct_preference_matrix" 
 ```
